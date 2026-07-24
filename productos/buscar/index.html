@@ -1,1 +1,53 @@
-h
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador GitHub Pages</title>
+    <style>
+      input {
+        width: 100%;
+        max-width: 400px;
+        padding: 12px 20px;
+        margin: 20px auto;
+        display: block;
+        font-size: 16px;
+        border: 2px solid #ccc;
+        border-radius: 25px;
+        outline: none;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+
+    <input type="text" id="searchInput" placeholder="Escribe tu búsqueda...">
+
+    <script>
+      var searchInput = document.getElementById('searchInput');
+
+      function updateUrlParameter() {
+        var query = searchInput.value.trim();
+        var baseUrl = window.location.origin + window.location.pathname;
+        
+        if (query) {
+          var newUrl = baseUrl + "?b=" + encodeURIComponent(query);
+          history.replaceState(null, '', newUrl);
+        } else {
+          history.replaceState(null, '', baseUrl);
+        }
+      }
+
+      searchInput.addEventListener('input', updateUrlParameter);
+
+      window.addEventListener('DOMContentLoaded', function() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var currentSearch = urlParams.get('b');
+        if (currentSearch) {
+          searchInput.value = currentSearch;
+        }
+      });
+    </script>
+
+  </body>
+</html>
