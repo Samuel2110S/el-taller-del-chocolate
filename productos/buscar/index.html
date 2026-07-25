@@ -3,11 +3,31 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscador GitHub Pages</title>
+    <title>El taller del chocolate - Buscar productos</title>
+    <link rel="icon" href="https://plain-enam-prod-public.komododecks.com/202607/23/Qi6mq0Aus8vuJopBJv8R/image.png">
     <style>
+      html, body {
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      background-color: #000000;
+      overflow-x: hidden;
+    }
+    .main-container {
+      display: flex; 
+      flex-direction: column; 
+      justify-content: flex-start; 
+      align-items: center; 
+      width: 100%; 
+      min-height: 100vh; 
+      box-sizing: border-box; 
+      gap: 35px; 
+      padding: 20px 0 0 0; 
+      margin: 0;
+    }
       input {
         width: 100%;
-        max-width: 400px;
+        max-width: 1400px;
         padding: 12px 20px;
         margin: 20px auto;
         display: block;
@@ -20,34 +40,31 @@
     </style>
   </head>
   <body>
-
-    <input type="text" id="searchInput" placeholder="Escribe tu búsqueda...">
-
+    <div class="main-container">
+      <input type="text" id="input" placeholder="Búsqueda...">
+    </div>
     <script>
-      var searchInput = document.getElementById('searchInput');
-
+      var input = document.getElementById('input');
       function updateUrlParameter() {
-        var query = searchInput.value.trim();
-        var baseUrl = window.location.origin + window.location.pathname;
+        var value = input.value.trim();
+        var url = window.location.origin + window.location.pathname;
         
-        if (query) {
-          var newUrl = baseUrl + "?b=" + encodeURIComponent(query);
-          history.replaceState(null, '', newUrl);
+        if (value) {
+          var nurl = url + "?b=" + encodeURIComponent(value);
+          history.replaceState(null, '', nurl);
         } else {
-          history.replaceState(null, '', baseUrl);
+          history.replaceState(null, '', url);
         }
       }
-
-      searchInput.addEventListener('input', updateUrlParameter);
-
+      input.addEventListener('input', updateUrlParameter);
+      
       window.addEventListener('DOMContentLoaded', function() {
         var urlParams = new URLSearchParams(window.location.search);
-        var currentSearch = urlParams.get('b');
-        if (currentSearch) {
-          searchInput.value = currentSearch;
+        var cSearch = urlParams.get('b');
+        if (cSearch) {
+          input.value = currentSearch;
         }
       });
     </script>
-
   </body>
 </html>
