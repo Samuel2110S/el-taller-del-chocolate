@@ -173,14 +173,18 @@
         }
       }
       input.addEventListener('input', updateUrlParameter);
-      
-      window.addEventListener('DOMContentLoaded', function() {
-        var urlParams = new URLSearchParams(window.location.search);
-        var cSearch = urlParams.get('b');
-        if (cSearch) {
-          input.value = cSearch;
+
+      function matchInput() {
+        var params = new URLSearchParams(window.location.search);
+        var search = params.get('b');
+        if (search) {
+          input.value = search;
+        } else {
+          input.value = "";
         }
-      });
+      }
+      
+      window.addEventListener('DOMContentLoaded', matchInput);
     </script>
   </body>
 </html>
