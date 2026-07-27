@@ -166,7 +166,7 @@
         var url = window.location.origin + window.location.pathname;
         
         if (value) {
-          var nurl = url + "?b=" + encodeURIComponent(value);
+          var nurl = `${url}?b=${encodeURIComponent(value)}`;
           history.replaceState(null, '', nurl);
         } else {
           history.replaceState(null, '', url);
