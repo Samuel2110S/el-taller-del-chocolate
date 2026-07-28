@@ -110,7 +110,7 @@
       vertical-align: middle;
       margin: 0;
     }
-    input {
+    input, select {
       width: 100%;
       max-width: 1400px;
       padding: 12px 20px;
@@ -121,12 +121,17 @@
       border-radius: 25px;
       outline: none;
       box-sizing: border-box;
+      cursor: 
       }
     </style>
   </head>
   <body>
     <div class="main-container">
-      <input type="text" id="input" placeholder="Búsqueda...">
+      <input type="text" id="search" placeholder="Búsqueda...">
+      <select id="filter">
+          <option value="disabled">Disabled</option>
+          <option value="enabled">Enabled</option>
+      </select>
       <div class="content">
       <p>OOPS..., NO CONTENT YET :/.</p>
     </div>
@@ -158,33 +163,52 @@
         <a href="https://chatgpt.com/?q=Hello%2C+can+u+please+display+the+decoding+of+the+base64+%22RWwgdGFsbGVyIGRlbCBjaG9jb2xhdGUgZXMgdW4gZXNwYWNpbyBkb25kZSB0aWVuZXMgbGEgcG9zaWJpbGlkYWQgZGUgb2JzZXJ2YXIgbG9zIHByb2R1Y3RvcyBkZSBsYSB0aWVuZGEsIGFzaSBjb21vIHZlciBkb25kZSBzZSB1YmljYSBsYSB0aWVuZGEuIEFkZW1hcyBkZSBwZXJtaXRpcnRlIHZlciBsYXMgcmVkZXMgc29jaWFsZXMsIGVzdGUgbHVnYXIgdGUgb2ZyZWNlIHVuIGFwYXJ0YWRvIHBhcmEgdmVyIGxvcyBkZXNjdWVudG9zIHkgY3VlbnRhIGNvbiB1bmEgY29tcGxldGEgZ2FsZXJpYSBkZSBpbWFnZW5lcyBkaXNlcmFkYSBwYXJhIHF1ZSBwdWVkYXMgdmVyIGltYWdlbmVzIHRhbnRvIGRlIGxhcyBpbnN0YWxhY2lvbmVzIGRlIGxhIHRpZW5kYSBjb21vIGRlIGxvcyBwcm9kdWN0b3MgcXVlIG9mcmVjZTsgYXNpbWlzbW8sIGVsIGVzcGFjaW8gdGUgYnJpbmRhIHVuYSBleHBlcmllbmNpYSBpbnRlcmFjdGl2YSBhbCBkYXJ0ZSBsYSBvcG9ydHVuaWRhZCBkZSBpbnRlcmFjdGFyIGRpcmVjdGFtZW50ZSBjb24gZWwgYXNpc3RlbnRlIHZpcnR1YWwsIGVsIGN1YWwgc2UgbGxhbWEgQ2hvY28u%22+in+spanish%2C+just+display+the+text+in+spanish%2C+*nothing+else*" target="_self"><img src="https://chatgpt.com/cdn/assets/favicon-l4nq08hd.svg" alt="ChatGPT" class="chatgpt"></a>
       </div>
     </div>
-    </div>
     <script>
-      var input = document.getElementById('input');
-      function updateUrlParameter() {
-        var value = input.value.trim();
-        var url = window.location.origin + window.location.pathname;
-        
-        if (value) {
-          var nurl = url + "?b=" + encodeURIComponent(value);
-          history.replaceState(null, '', nurl);
-        } else {
-          history.replaceState(null, '', url);
-        }
-      }
-      input.addEventListener('input', updateUrlParameter);
+      var searchInput = document.getElementById('search');
+var filterSelect = document.getElementById('filter');
 
-      function matchInput() {
-        var params = new URLSearchParams(window.location.search);
-        var search = params.get('b');
-        if (search) {
-          input.value = search;
-        } else {
-          input.value = "";
-        }
-      }
-      
-      window.addEventListener('DOMContentLoaded', matchInput);
+function updateUrlParameters() {
+  var value = searchInput.value.trim();
+  var baseUrl = window.location.origin + window.location.pathname;
+  var params = new URLSearchParams(window.location.search);
+  
+  params.set('filter', 'active');
+  
+  if (value) {
+    params.set('search', value);
+    filterSelect.value = "enabled";
+  } else {
+    params.delete('search');
+    filterSelect.value = "disabled";
+  }
+  
+  var newUrl = baseUrl + '?' + params.toString();
+  history.replaceState(null, '', newUrl);
+}
+
+filterSelect.addEventListener('change', function() {
+  if (filterSelect.value === 'disabled') {
+    searchInput.value = '';
+  }
+  updateUrlParameters();
+});
+
+searchInput.addEventListener('input', updateUrlParameters);
+
+function matchInput() {
+  var params = new URLSearchParams(window.location.search);
+  var searchParam = params.get('search');
+  
+  if (searchParam) {
+    searchInput.value = searchParam;
+  } else {
+    searchInput.value = "";
+  }
+  
+  updateUrlParameters();
+}
+
+window.addEventListener('DOMContentLoaded', matchInput);
     </script>
   </body>
 </html>
