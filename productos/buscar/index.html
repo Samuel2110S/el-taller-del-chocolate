@@ -168,29 +168,46 @@
 var filterSelect = document.getElementById('filter');
 
 function updateUrlParameters() {
-  var value = searchInput.value.trim();
+  var searchValue = searchInput.value.trim();
+  var filterValue = filterSelect.value;
   var baseUrl = window.location.origin + window.location.pathname;
   var params = new URLSearchParams(window.location.search);
   
-  params.set('filter', 'active');
+  params.set('filter', filterValue);
   
-  if (value) {
-    params.set('search', value);
-    filterSelect.value = "enabled";
+  if (searchValue) {
+    params.set('search', searchValue);
   } else {
     params.delete('search');
-    filterSelect.value = "disabled";
   }
   
   var newUrl = baseUrl + '?' + params.toString();
   history.replaceState(null, '', newUrl);
 }
 
-searchInput.addEventListener('input', updateUrlParameters);
+function handleSearchInput() {
+  if (searchInput.value.trim()) {
+    filterSelect.value = "enabled";
+  } else {
+    filterSelect.value = "disabled";
+  }
+  updateUrlParameters();
+}
+
+function handleFilterChange() {
+  if (filterSelect.value === 'disabled') {
+    searchInput.value = '';
+  }
+  updateUrlParameters();
+}
+
+searchInput.addEventListener('input', handleSearchInput);
+filterSelect.addEventListener('change', handleFilterChange);
 
 function matchInput() {
   var params = new URLSearchParams(window.location.search);
   var searchParam = params.get('search');
+  var filterParam = params.get('filter');
   
   if (searchParam) {
     searchInput.value = searchParam;
@@ -198,14 +215,13 @@ function matchInput() {
     searchInput.value = "";
   }
   
-  var value = searchInput.value.trim();
-  params.set('filter', 'active');
-  
-  if (value) {
-    filterSelect.value = "enabled";
+  if (filterParam && (filterParam === 'enabled' || filterParam === 'disabled')) {
+    filterSelect.value = filterParam;
   } else {
-    filterSelect.value = "disabled";
+    filterSelect.value = searchInput.value.trim() ? "enabled" : "disabled";
   }
+  
+  updateUrlParameters();
 }
 
 window.addEventListener('DOMContentLoaded', matchInput);
