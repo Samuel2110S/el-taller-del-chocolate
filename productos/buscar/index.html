@@ -186,13 +186,6 @@ function updateUrlParameters() {
   history.replaceState(null, '', newUrl);
 }
 
-filterSelect.addEventListener('change', function() {
-  if (filterSelect.value === 'disabled') {
-    searchInput.value = '';
-  }
-  updateUrlParameters();
-});
-
 searchInput.addEventListener('input', updateUrlParameters);
 
 function matchInput() {
@@ -205,7 +198,14 @@ function matchInput() {
     searchInput.value = "";
   }
   
-  updateUrlParameters();
+  var value = searchInput.value.trim();
+  params.set('filter', 'active');
+  
+  if (value) {
+    filterSelect.value = "enabled";
+  } else {
+    filterSelect.value = "disabled";
+  }
 }
 
 window.addEventListener('DOMContentLoaded', matchInput);
