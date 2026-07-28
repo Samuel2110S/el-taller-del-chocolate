@@ -129,8 +129,10 @@
     <div class="main-container">
       <input type="text" id="search" placeholder="Búsqueda...">
       <select id="filter">
-          <option value="disabled">Disabled</option>
-          <option value="enabled">Enabled</option>
+          <option value="ninguno">Ninguno</option>
+          <option value="negro">Negro</option>
+          <option value="blanco">Blanco</option>
+          <option value="combinado">Combinado</option>
       </select>
       <div class="content">
       <p>OOPS..., NO CONTENT YET :/.</p>
@@ -168,9 +170,16 @@
 var searchInput = document.getElementById('search');
 
 function updateUrlParameters() {
+  var searchValue = searchInput.value.trim();
   var filterValue = filterSelect.value.toLowerCase();
   var baseUrl = window.location.origin + window.location.pathname;
   var params = new URLSearchParams(window.location.search);
+  
+  if (searchValue) {
+    params.set('search', searchValue);
+  } else {
+    params.delete('search');
+  }
   
   if (filterValue && filterValue !== 'ninguno') {
     params.set('filter', filterValue);
@@ -182,11 +191,19 @@ function updateUrlParameters() {
   history.replaceState(null, '', newUrl);
 }
 
+searchInput.addEventListener('input', updateUrlParameters);
 filterSelect.addEventListener('change', updateUrlParameters);
 
 function matchInput() {
   var params = new URLSearchParams(window.location.search);
+  var searchParam = params.get('search');
   var filterParam = params.get('filter');
+  
+  if (searchParam) {
+    searchInput.value = searchParam;
+  } else {
+    searchInput.value = '';
+  }
   
   if (filterParam) {
     var matchingOption = Array.from(filterSelect.options).find(function(option) {
