@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Taller del Chocolate - Habla con Choco</title>
+  <link rel="icon" href="https://plain-enam-prod-public.komododecks.com/202607/23/Qi6mq0Aus8vuJopBJv8R/image.png">
+  <style>
+    :root {
+      --primary-color: #3d2314;
+      --accent-color: #d4a373;
+      --chat-bg: #000000;
+      --user-text-color: #ffd700;
+      --bot-text-color: #d4a373;
+      --msg-bot-bg: #1c1510;
+      --msg-user-bg: #2b1d0c;
+    }
+
+    html, body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--chat-bg);
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .chat-window {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--chat-bg);
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    .chat-header {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 2px solid var(--accent-color);
+    }
+
+    .chat-header-icon {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .chat-header h3 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--accent-color);
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background-color: var(--chat-bg);
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 12px 18px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .message.bot {
+      background-color: var(--msg-bot-bg);
+      color: var(--bot-text-color);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      border: 1px solid #3d2a1b;
+    }
+
+    .message.user {
+      background-color: var(--msg-user-bg);
+      color: var(--user-text-color);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      border: 1px solid #523b19;
+    }
+
+    .chat-input-area {
+      display: flex;
+      justify-content: center;
+      padding: 16px 24px;
+      background-color: #120d09;
+      border-top: 1px solid #3d2314;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .input-wrapper {
+      display: flex;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 12px 20px;
+      border: 1px solid var(--accent-color);
+      border-radius: 25px;
+      outline: none;
+      font-size: 15px;
+      background-color: #000000;
+      color: #ffffff;
+    }
+
+    .chat-input-area input::placeholder {
+      color: #888888;
+    }
+
+    .chat-input-area button {
+      background-color: var(--primary-color);
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      padding: 12px 24px;
+      margin-left: 12px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+      transition: background-color 0.2s;
+    }
+
+    .chat-input-area button:hover {
+      background-color: #52301c;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <img class="chat-header-icon" src="https://plain-enam-prod-public.komododecks.com/202607/19/p8VN8wrAiw1RpGFeHTb5/image.png" alt="Choco" />
+      <h3>Choco</h3>
+    </div>
+    
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">
+        ¡Hola! Te damos la bienvenida a <strong>El Taller del Chocolate</strong>. ¿En qué te puedo ayudar hoy con nuestros chocolates artesanales, talleres o pedidos personalizados?
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <div class="input-wrapper">
+        <input type="text" id="userInput" placeholder="Pregunta sobre talleres, menú, horarios..." onkeypress="handleKeyPress(event)" />
+        <button type="button" onclick="sendMessage()">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const KNOWLEDGE_BASE = [
+      {
+        keywords: ["hola", "holi", "holis", "hello"],
+        response: "¡Hola!, me llamo Choco, el asistente virtual de la tienda El taller del chocolate, puedes preguntarme lo que quieras de la tienda."
+      },
+      {
+        keywords: ["adiós", "adios", "chao"],
+        response: "¡Adiós!, que te vaya bien, fue un gusto conocerte :D."
+      },
+      {
+        keywords: ["información", "informacion", "solicito información", "solicito informacion", "quiero información", "quiero informacion"],
+        response: "El Taller del Chocolate es el sitio web oficial de la tienda donde puedes explorar su catálogo de productos y galería de imágenes, encontrar su ubicación y redes sociales y acceder a descuentos imperdibles."
+      }
+    ];
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage();
+      }
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage(text, 'user');
+      input.value = '';
+
+      const typingDiv = addMessage("...", 'bot');
+
+      setTimeout(() => {
+        const rawReply = matchKnowledge(text);
+        const formattedReply = rawReply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        typingDiv.innerHTML = formattedReply;
+      }, 500);
+    }
+
+    function addMessage(text, sender) {
+      const messagesContainer = document.getElementById('chatMessages');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${sender}`;
+      msgDiv.innerHTML = text;
+      messagesContainer.appendChild(msgDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      return msgDiv;
+    }
+
+    function matchKnowledge(query) {
+      const lowerQuery = query.toLowerCase();
+
+      for (const item of KNOWLEDGE_BASE) {
+        if (item.keywords.some(kw => lowerQuery.includes(kw))) {
+          return item.response;
+        }
+      }
+
+      return "No estoy seguro de ese detalle específico, ¡pero me encantaría ayudarte! Puedes preguntar otra cosa de nuestra tienda.";
+    }
+  </script>
+</body>
+</html>
