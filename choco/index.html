@@ -159,7 +159,7 @@
 
     <div class="chat-input-area">
       <div class="input-wrapper">
-        <input type="text" id="userInput" placeholder="Pregunta sobre talleres, menú, horarios..." onkeypress="handleKeyPress(event)" />
+        <input type="text" id="userInput" placeholder="Hazle una pregunta a Choco..." onkeypress="handleKeyPress(event)" />
         <button type="button" onclick="sendMessage()">Enviar</button>
       </div>
     </div>
@@ -169,11 +169,15 @@
     const KNOWLEDGE_BASE = [
       {
         keywords: ["Hola", "hola", "Holi", "holi", "Holis", "holis", "Hello", "hello"],
-        response: "¡Hola!, me llamo Choco, el asistente virtual de la tienda El taller del chocolate, puedes preguntarme lo que quieras de la tienda."
+        response: "¡Hola!, me llamo Choco, el asistente virtual de la tienda El taller del chocolate, puedes preguntarme lo que quieras de la tienda, y con mucho gusto te ayudaré :D."
       },
       {
         keywords: ["Adiós", "adiós", "Adios", "adios", "Chao", "chao", "Bye", "bye"],
         response: "¡Adiós!, que te vaya bien, fue un gusto conocerte :D."
+      },
+      {
+        keywords: ["Gracias", "gracias", "Thank you", "thank you", "Thank-you", "thank-you", "Thanks", "thanks"],
+        response: "¡De nada!, si tienes alguna otra duda o inquietud, no dudes en pedirme ayuda :D."
       },
       {
         keywords: ["Información", "información", "Informacion", "informacion", "Solicito información", "solicito información", "Solicito informacion", "solicito informacion", "Quiero información", "quiero información", "Quiero informacion", "quiero informacion"],
