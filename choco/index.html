@@ -168,23 +168,23 @@
   <script>
     const KNOWLEDGE_BASE = [
       {
-        keywords: ["Hola", "hola", "Holi", "holi", "Holis", "holis", "Hello", "hello"],
+        keywords: ["hola", "holi", "holis", "hello"],
         response: "¡Hola!, me llamo Choco, el asistente virtual de la tienda El taller del chocolate, puedes preguntarme lo que quieras de la tienda, y con mucho gusto te ayudaré :D."
       },
       {
-        keywords: ["Cómo estás", "cómo estás", "Como estás", "como estás", "Cómo estas", "cómo estas", "Como estas", "como estas"],
+        keywords: ["cómo estás", "como estás", "cómo estas", "como estas"],
         response: "¡Estoy muy bien!, gracias por preguntarme :D."
       },
       {
-        keywords: ["Adiós", "adiós", "Adios", "adios", "Chao", "chao", "Bye", "bye"],
+        keywords: ["adiós", "adios", "chao", "bye"],
         response: "¡Adiós!, que te vaya bien, fue un gusto conocerte :D."
       },
       {
-        keywords: ["Gracias", "gracias", "Thank you", "thank you", "Thank-you", "thank-you", "Thanks", "thanks"],
+        keywords: ["gracias", "thank you", "thank-you", "thanks"],
         response: "¡De nada!, si tienes alguna otra duda o inquietud, no dudes en pedirme ayuda :D."
       },
       {
-        keywords: ["Información", "información", "Informacion", "informacion", "Solicito información", "solicito información", "Solicito informacion", "solicito informacion", "Quiero información", "quiero información", "Quiero informacion", "quiero informacion", "Dame información", "dame información", "Dame informacion", "dame informacion", "Info", "info", "Inf", "inf"],
+        keywords: ["información", "informacion", "info", "inf"],
         response: "El Taller del Chocolate es el sitio web oficial de la tienda donde puedes explorar su catálogo de productos y galería de imágenes, encontrar su ubicación y redes sociales y acceder a descuentos imperdibles."
       }
     ];
@@ -217,7 +217,11 @@
       const messagesContainer = document.getElementById('chatMessages');
       const msgDiv = document.createElement('div');
       msgDiv.className = `message ${sender}`;
-      msgDiv.innerHTML = text;
+      if (sender === 'user') {
+        msgDiv.textContent = text;
+      } else {
+        msgDiv.innerHTML = text;
+      }
       messagesContainer.appendChild(msgDiv);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       return msgDiv;
