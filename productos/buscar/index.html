@@ -182,6 +182,32 @@
       var filterSelect = document.getElementById('filter');
 var searchInput = document.getElementById('search');
 
+      function filterProducts() {
+  var searchInput = document.getElementById('search');
+  var filterSelect = document.getElementById('filter');
+  
+  var searchValue = searchInput.value.trim().toLowerCase();
+  var filterValue = filterSelect.value.toLowerCase();
+  
+  var products = document.querySelectorAll('.product');
+
+  products.forEach(function(img) {
+    var psearch = (img.getAttribute('psearch') || '').toLowerCase();
+    var pfilt = (img.getAttribute('pfilt') || '').toLowerCase();
+
+    var matchSearch = !searchValue || psearch.includes(searchValue);
+    var matchFilter = filterValue === 'ninguno' || pfilt === filterValue;
+
+    var targetElement = img.parentElement.tagName === 'A' ? img.parentElement : img;
+
+    if (matchSearch && matchFilter) {
+      targetElement.style.display = "";
+    } else {
+      targetElement.style.display = "none";
+    }
+  });
+      }
+
 function updateUrlParameters() {
   var searchValue = searchInput.value.trim();
   var filterValue = filterSelect.value.toLowerCase();
@@ -202,6 +228,8 @@ function updateUrlParameters() {
   
   var newUrl = params.toString() ? baseUrl + '?' + params.toString() : baseUrl;
   history.replaceState(null, '', newUrl);
+
+  filterProducts()
 }
 
 searchInput.addEventListener('input', updateUrlParameters);
